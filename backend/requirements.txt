@@ -1,6 +1,5 @@
 Flask
 Flask-Cors
 PyMuPDF
-spacy
 scikit-learn
-en_core_web_sm
+spacy
