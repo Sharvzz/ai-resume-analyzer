@@ -1,7 +1,5 @@
-import spacy
-
-# Load English model (make sure it's installed)
-nlp = spacy.load("en_core_web_sm")
+import en_core_web_sm
+nlp = en_core_web_sm.load()
 
 # A simple list of known skills (expand later)
 SKILL_KEYWORDS = [
