@@ -1,0 +1,15 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-flex-col {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-flex-grow {
+  flex: 1 0 auto;
+}
