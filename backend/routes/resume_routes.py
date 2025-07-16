@@ -3,6 +3,7 @@ import os
 from services.resume_parser import extract_text_from_pdf
 from services.skill_extractor import extract_skills_from_text
 from services.skill_matcher import compare_skills
+from services.recommender import get_recommendation
 
 
 resume_bp = Blueprint('resume', __name__)
@@ -63,3 +64,11 @@ def skill_gap():
     result = compare_skills(resume_skills, jd_skills)
 
     return jsonify(result), 200
+
+
+@resume_bp.route('/recommend', methods=['POST'])
+def recommend():
+    data = request.get_json()
+    missing_skills = data.get('missing_skills', [])
+    recommendations = get_recommendation(missing_skills)
+    return jsonify(recommendations)
