@@ -5,6 +5,7 @@ from services.skill_extractor import extract_skills_from_text
 from services.skill_matcher import compare_skills
 from services.recommender import get_course_recommendations  # 🔥 Added
 
+
 resume_bp = Blueprint('resume', __name__)
 UPLOAD_FOLDER = 'uploads'
 
