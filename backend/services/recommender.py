@@ -1,5 +1,6 @@
 import os
 import requests
+from bs4 import BeautifulSoup
 
 # Recommended: Use environment variable
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
@@ -30,25 +31,40 @@ def get_youtube_course(skill):
         return {"title": title, "url": url}
     return None
 
-def get_recommendation(missing_skills: list[str]) -> dict:
-    skill_course_map = {
-        "python": [
-            {"title": "Python for Beginners", "url": "https://www.youtube.com/watch?v=_uQrJ0TkZlc"},
-            {"title": "Coursera Python Basics", "url": "https://www.coursera.org/learn/python"},
-        ],
-        "machine learning": [
-            {"title": "Intro to Machine Learning", "url": "https://www.youtube.com/watch?v=Gv9_4yMHFhI"},
-        ],
-        # Add more static mappings as needed
+def get_coursera_courses(skill):
+    url = f"https://www.coursera.org/search?query={skill}"
+    headers = {
+        "User-Agent": "Mozilla/5.0"
     }
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        print("Coursera HTML response:", response.text[:500])  # Print first 500 chars for debug
+        if response.status_code != 200:
+            return []
+        soup = BeautifulSoup(response.text, "html.parser")
+        results = []
+        for a in soup.select('a[data-click-key="search.search.click.search_card"]'):
+            title = a.get("aria-label")
+            href = a.get("href")
+            if title and href and href.startswith("/learn/"):
+                course_url = f"https://www.coursera.org{href}"
+                results.append({"title": title, "url": course_url})
+            if len(results) >= 2:
+                break
+        return results
+    except Exception as e:
+        print("Coursera scraping error:", e)
+        return []
+
+def get_recommendation(missing_skills: list[str]) -> dict:
     recommendations = {}
     for skill in missing_skills:
-        key = skill.lower()
-        courses = skill_course_map.get(key, [])
-        if not courses:
-            yt_course = get_youtube_course(skill)
-            if yt_course:
-                courses = [yt_course]
+        courses = []
+        yt_course = get_youtube_course(skill)
+        if yt_course:
+            courses.append(yt_course)
+        coursera_courses = get_coursera_courses(skill)
+        courses.extend(coursera_courses)
         recommendations[skill] = courses
     return recommendations
 
