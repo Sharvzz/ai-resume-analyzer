@@ -1,5 +1,8 @@
-Flask
-Flask-Cors
-PyMuPDF
-spacy
-scikit-learn
+Flask             # Web framework for building REST APIs
+Flask-Cors        # Enables Cross-Origin Resource Sharing for the API
+PyMuPDF           # For extracting text from PDF resumes
+spacy             # Natural Language Processing for skill extraction
+scikit-learn      # (Optional) For any ML/classification tasks (e.g., skill matching)
+requests          # For making HTTP requests to external APIs (YouTube, Coursera)
+beautifulsoup4    # For scraping Coursera course recommendations
+python-dotenv     # For loading environment variables (API keys, etc.)
